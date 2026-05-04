@@ -3,6 +3,12 @@ import tempfile
 import subprocess
 import os
 
+# Serve ads.txt manually
+query = st.query_params
+
+if "ads.txt" in st.query_params:
+    st.text("google.com, pub-4586891706711357, DIRECT, f08c47fec0942fa0")
+    st.stop()
 st.set_page_config(page_title="Media Converter - Convert Files Online", layout="wide")
 
 # 🔥 REMOVE DEFAULT STREAMLIT UI
