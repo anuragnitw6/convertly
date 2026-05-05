@@ -1,26 +1,30 @@
-from flask import Flask, Response
+from flask import Flask, send_file
 import subprocess
+import threading
 
 app = Flask(__name__)
 
-# ✅ Serve ads.txt properly
-@app.route("/ads.txt")
+# 🔥 Serve ads.txt properly
+@app.route('/ads.txt')
 def ads():
-    return Response(
-        "google.com, pub-4586891706711357, DIRECT, f08c47fec0942fa0",
-        mimetype="text/plain"
-    )
+    return send_file('ads.txt', mimetype='text/plain')
 
-# ✅ Run Streamlit app
-@app.route("/")
+# 🔥 Run Streamlit in background
 def run_streamlit():
-    return subprocess.Popen([
+    subprocess.run([
         "streamlit",
         "run",
         "app.py",
-        "--server.port", "10000",
+        "--server.port", "8501",
         "--server.address", "0.0.0.0"
     ])
+
+threading.Thread(target=run_streamlit).start()
+
+# 🔥 Redirect root to Streamlit
+@app.route('/')
+def index():
+    return "Streamlit app running..."
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
